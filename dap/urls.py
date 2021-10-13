@@ -17,9 +17,12 @@ urlpatterns = [
     # path("", DefaultView.as_view(), name = "Default View")
 
     # ADMIN uRL PATH
-    # path("loginadmin", AdminLoginView.as_view(), name="Admin Login"),
-    # path("adminindex", AdminIndexView.as_view(), name="Admin Index"),
-    # path('admin/', include('django.contrib.auth.urls')),
+    path("loginadmin", AdminLoginView.as_view(), name="Admin Login"),
+    path("adminindex", AdminIndexView.as_view(), name="Admin Index"),
+    path("profileadmin", AdminProfileView.as_view(), name = "Admin Profile"),
+    path('admin/', include('django.contrib.auth.urls')),
+
+    path('add-digital-product', AddDigitalProductView.as_view(), name = "Add Digital Product")
 
 ]
 

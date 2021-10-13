@@ -115,6 +115,28 @@ class Reg_User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email +" "+self.username
 
+
+class Add_Products(models.Model):
+    product_title = models.CharField(max_length = 125, default = None)
+    product_sku = models.CharField(max_length = 30, default = None)
+    TECHNOLOGY = 'technology'
+    FASHION = 'fashion'
+    ACCESSORIES = 'accessory'
+    PRODUCT_CATEGORIES = [
+    (TECHNOLOGY, 'Technology'),
+    (FASHION, 'Fashion'),
+    (ACCESSORIES, 'Accessory'),
+    ]
+    product_categories = models.CharField(max_length=150, choices = PRODUCT_CATEGORIES, default=True)
+    product_price = models.FloatField(default=True)
+    product_summary = models.TextField(max_length=255, help_text="Input some information", verbose_name="Product Detail")
+    product_status = models.BooleanField(default = False)
+    product_description = models.TextField(max_length=255, default=False, help_text="Input some information", verbose_name="Product Detail")
+    product_meta_title = models.CharField(max_length = 125, default = None)   
+    product_meta_description = models.TextField(max_length=255, default=False, help_text="Input some information", verbose_name="Product Detail")
+
+
+
 class Upload_Product(models.Model):
     def get_product_uploaded_image_filepath(self,upload_to):
         return f'product_upload_images/{self.product_categories}/{self.pk}/{"product_upload_local_image.png"}'
@@ -176,16 +198,16 @@ class Upload_Product(models.Model):
         return self.product_name
 
 
-#MEDIA_CHOICES = [
-#     ('Audio', (
-#             ('vinyl', 'Vinyl'),
-#             ('cd', 'CD'),
-#         )
-#     ),
-#     ('Video', (
-#             ('vhs', 'VHS Tape'),
-#             ('dvd', 'DVD'),
-#         )
-#     ),
-#     ('unknown', 'Unknown'),
-# ]
+MEDIA_CHOICES = [
+    ('Audio', (
+            ('vinyl', 'Vinyl'),
+            ('cd', 'CD'),
+        )
+    ),
+    ('Video', (
+            ('vhs', 'VHS Tape'),
+            ('dvd', 'DVD'),
+        )
+    ),
+    ('unknown', 'Unknown'),
+]

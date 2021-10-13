@@ -119,42 +119,42 @@ class ProductPageView(View):
 
 
 # ADMIN VIEW LIST
-# class AdminLoginView(View):
-#     def get(self, request):
-#         template_name = 'admin/login.html'
-#         context = {
-#             'success': "You have successfully login",
-#         }
+class AdminLoginView(View):
+    def get(self, request):
+        template_name = 'admin/login.html'
+        context = {
+            'success': "You have successfully login",
+        }
 
         
-        # u_name = Reg_User.objects.get(username)
-        # pword = Reg_User.objects.get(password)
-        # username = request.POST['username']
-        # password = request.POST['password']
+        u_name = Reg_User.objects.get(username)
+        pword = Reg_User.objects.get(password)
+        username = request.POST['username']
+        password = request.POST['password']
 
 
 
-        # user = authenticate(request, username=username, password=password)
-        # if user is not None:
-        #     login(request, user)
-        #     # return redirect('html/index.html')
-        # else:
-        #     # Return an 'invalid login' error message.
-        #     return "not found"
-        #     pass
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # return redirect('html/index.html')
+        else:
+            # Return an 'invalid login' error message.
+            return "not found"
+            pass
 
-        # # return HttpResponseRedirect(reverse('html/index.html'))
-        # return render(request, template_name, context)
+        # return HttpResponseRedirect(reverse('html/index.html'))
+        return render(request, template_name, context)
 
 
-    # @login_required(login_url = 'admin/login.html')
-    # def user_limit(request):
-    #     next = 'html/index.html'
-    #     if not request.user.is_authenticated:
-    #         # return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-    #         return redirect_to_login(next, login_url, redirect_field_name = 'next')
-    #     else:
-    #         print('An Error has occur')
+    @login_required(login_url = 'admin/login.html')
+    def user_limit(request):
+        next = 'html/index.html'
+        if not request.user.is_authenticated:
+            # return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+            return redirect_to_login(next, login_url, redirect_field_name = 'next')
+        else:
+            print('An Error has occur')
 
 def login_view(request):
     # username = request.POST['username']
@@ -183,6 +183,21 @@ class AdminIndexView(View):
 
 
 
+class AdminProfileView(View):
+    def get(self, request):
+        template_name = 'admin/profile.html'
+        context = {}
+
+        return render(request, template_name, context)
+
 
 def logout_view(request):
     logout(request)
+
+
+class AddDigitalProductView(View):
+    def get(self, request):
+        template_name = 'admin/add-digital-product.html'
+        context = {}
+
+        return render(request, template_name, context)

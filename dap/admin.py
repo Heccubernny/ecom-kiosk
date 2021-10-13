@@ -43,3 +43,5 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(Reg_User, CustomUserAdmin)
 
 admin.site.register(Upload_Product)
+
+admin.site.register(Add_Products)
