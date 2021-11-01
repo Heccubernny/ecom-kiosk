@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-
+from dap.models import Reg_User as ru
 # Create your tests here.
 
 class UsersManagersTests(TestCase):
@@ -43,3 +43,16 @@ class UsersManagersTests(TestCase):
         with self.assertRaises(ValueError):
             User.objects.create_superuser(
                 email='super@user.com', password='foo', is_superuser=False)
+
+
+
+class UserLogiinTests(TestCase):
+	def test_reg_users(self):
+		user = ru.objects.create_user(email = 'kiosk@user.com', password="abracadabra")
+		self.assertEqual(user.email, 'kiosk@user.com')
+		self.assertTrue(user.is_active)
+
+		try:
+			self.assertIsNone(user.username)
+		except AttributeError:
+			pass

@@ -100,7 +100,8 @@ class Reg_User(AbstractBaseUser, PermissionsMixin):
     # email = models.EmailField(_('email address'), unique=True)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=45, unique=True)
-    password = models.CharField(max_length=45)
+    password1 = models.CharField(max_length=45, default=False)
+    password2 = models.CharField(max_length=45, default=False)
     last_login = models.DateTimeField(auto_now=True, verbose_name="last login")
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -196,6 +197,17 @@ class Upload_Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
+
+    #Not needed code just for a reference
+
+    # class CityAutoComp(autocomplete.Select2QuerySetView):
+    #     def get_queryset(self):
+    #         qs = City.objects.all()
+
+    #         if self.q:
+    #             qs = qs.filter(name___istartswith = self.q)
+    #         return qs
 
 
 MEDIA_CHOICES = [

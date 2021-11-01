@@ -113,7 +113,7 @@ DATABASES = {
 }
 
 
-# Password validatio
+# Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -132,6 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'dap.Reg_User'
+# AUTH_USER_MODEL = 'auth.User'
 # AUTHENTICATION_BACKENDS = (
 #     'django.contrib.auth.backends.AlloAllUsersModelBackend',
 #     'dap.backends.CaseInsensitiveModelBackend')

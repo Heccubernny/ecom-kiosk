@@ -7,9 +7,11 @@ from django.urls import reverse
 from django.views.generic import *
 from .models import *
 from rest_framework import generics
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, User
+from dap.models import Reg_User as ru
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -31,8 +33,34 @@ class LoginUserView(View):
 class RegisterUserView(View):
     def get(self, request):
         template_name = "html/register.html"
+
+    
+
         context = {}
         return render(request, template_name, context)
+
+    def post(self, request):
+        if request.method == "POST":
+            firstname = request.POST['fname']
+            lastname = request.POST['lname']
+            username  = request.POST.get('uname')
+            email = request.POST['email']
+            password1 = request.POST['password1']
+            password2 = request.POST.get('password2')
+
+            myuser = ru.objects.create_user(username = "username", email = "email", password1="password1", password2="password2")
+            myuser.first_name = firstname
+            myuser.last_name = lastname
+
+            myuser.save()
+
+            success_message = "Your Account has been successfully created"
+            error_message = "Your Account creation was not successful, Please check your input"
+
+            messages.success(request, success_message)
+
+            return redirect('/login')
+
 
 class BaseView(View):
     """docstring for BaseView"""
@@ -201,3 +229,5 @@ class AddDigitalProductView(View):
         context = {}
 
         return render(request, template_name, context)
+
+

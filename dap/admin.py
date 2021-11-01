@@ -39,9 +39,20 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('email',)
     readonly_fields = ('id', 'date_joined', 'last_login')
 
+    class Media:
+        js = ('js/placeholder.js',)
+        css = {
+            'all': ('css/admin.css',)
+        }
+
+
+
 
 admin.site.register(Reg_User, CustomUserAdmin)
 
 admin.site.register(Upload_Product)
 
 admin.site.register(Add_Products)
+
+# class UserAdmin(admin.ModelAdmin):
+#     form = UserLogForm
