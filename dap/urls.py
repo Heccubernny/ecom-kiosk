@@ -20,7 +20,7 @@ urlpatterns = [
     path("productpage", ProductPageView.as_view(), name = "product Page"),
     # path("", DefaultView.as_view(), name = "Default View")
 
-    ADMIN URL PATH
+    # ADMIN URL PATH
     path("loginadmin", AdminLoginView.as_view(), name="Admin Login"),
     path("home_admin", AdminHomeView.as_view(), name="Admin Index"),
     path("profileadmin", AdminProfileView.as_view(), name = "Admin Profile"),

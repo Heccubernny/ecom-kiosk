@@ -58,16 +58,14 @@ import uuid
 
 class UserRegistration(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length = 45)
-    last_name = models.CharField(max_length = 45)
     auth_token = models.CharField(max_length=100, default=False)
     password = models.CharField(max_length=45, default=False)
-    c_password = models.CharField(max_length=45, default=False)
+    # c_password = models.CharField(max_length=45, default=False)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add = True)
    
     def __str__(self):
-        return self.user.username
+        return self.user.get_username()
 
 
 

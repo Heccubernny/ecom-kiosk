@@ -14,6 +14,7 @@ from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
 import uuid
 from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password
 
 
 # content_type = ContentType.objects.get_for_model(Upload_Product)
@@ -27,16 +28,39 @@ from django.core.mail import send_mail
 # Create your views here.
 class LoginUserView(View):
     def get(self, request):
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = User.objects.filter(username = username).first()
+
+            if user is None:
+                messages.success(request, 'User not found.')
+                return redirect('/login')
+
+            profile_obj = UserRegistration.objects.filter(user = user).first()
+
+            if not profile_obj.is_verified:
+                messages.success(request, 'Profile is not verified check your mail.')
+                return redirect('/login')
+
+            user = authentication(username = username or email, password = password)
+
+            if user is None:
+                messages.success(request, 'Wrong password.')
+                return redirect('/login')
+
+            login(request, user)
+
+            return redirect('/index')
 
         return render(request, 'html/login.html')
 
 
 class RegisterUserView(View):
+
     def get(self, request):
         template_name = "html/register.html"
-
-    
-
         context = {}
         return render(request, template_name, context)
 
@@ -47,57 +71,61 @@ class RegisterUserView(View):
             username  = request.POST.get('uname')
             email = request.POST['email']
             password = request.POST['password']
-            c_password = request.POST['c_password']
+            # c_password = request.POST['c_password']
 
             try:
-                # if User.objects.filter(username = username).first():
-                #     messages.success(request, 'Username is taken')
-                #     return redirect('/register')
-                # if User.objects.filter(email=email).first():
-                #     messages.success(request, 'Email is taken')
-                #     return redirect('/register')
+                if User.objects.filter(username = username).first():
+                    messages.success(request, 'Username is taken')
+                    return redirect('/register')
+                if User.objects.filter(email=email).first():
+                    messages.success(request, 'Email is taken')
+                    return redirect('/register')
                 # if User.objects.filter(password1 == password2).first():
                 #     messages.success(request, 'password does not match')
                 #     return redirect('/register')
 
 
-                myuser = User(username = username, email = email, auth_token = auth_token)
-                profile_obj.set_password(password)
-                profile_obj.set_password(c_password)
-                # myuser.first_name = firstname
-                # myuser.last_name = lastname
-                # myuser.auth_token = auth_token
-                # myuser.password = password
-                # myuser.c_password = c_password
-                # myuser.save()
+                user = User(username = username, email = email)
+                user.set_password(password)
+                # user.set_password(c_password)
+                user.save()
                 auth_token = str(uuid.uuid4())
-                profile_obj = UserRegistration(user = myuser, auth_token = auth_token)
-                profile_obj.firstname = firstname
-                profile_obj.lastname = lastname
+                profile_obj = UserRegistration.objects.create(user = user, auth_token = auth_token)
                 profile_obj.set_password(password)
-                profile_obj.set_password(c_password)
+                # profile_obj.set_password(c_password)
+                # profile_obj.check_password(password)
                 profile_obj.save()
 
-                
+                send_mail_after_registration(email, auth_token)
 
-                return redirect('token')
+
+                # return redirect('/token')
 
             except Exception as e:
                 print(e)
 
-            return redirect('/login')
+            return redirect('/token')
+
+    def send_mail_after_registration(email, token):
+        subject = 'Your accounts need to be verified'
+        message = f'Hi paste the link to verify your account https://127.0.0.1:8000/verify/{token}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+        send_mail(subject, message, email_from, recipient_list)
+
 
     def verify(self, request, auth_token):
         try:
             profile_obj = UserRegistration.objects.filter(auth_token = auth_token).first()
 
             if profile_obj:
+                verify_message = "Your Account is been verify"
+                error_message = "Your Account creation was not successful, Please check your input"
+                success_message = "Your Account has been verified."
                 if profile_obj.is_verified:
                     messages.success(request, verify_message)
                     return redirect('/login')
-                    verify_message = "Your Account is been verify"
-                    error_message = "Your Account creation was not successful, Please check your input"
-                    success_message = "Your Account has been verified."
+                    
                     profile_obj.is_verified = True
                     profile_obj.save()
                     messages.success(request, success_message)
@@ -105,6 +133,9 @@ class RegisterUserView(View):
                 else:
                     messages.success(request, error_message)
                     return redirect('/register')
+
+        except Exception as e:
+                print(e)
 
 
 
@@ -128,8 +159,9 @@ class BaseView(View):
 
 
 class HomeView(View):
-    # @login_required
+    @login_required
     def get(self, request):
+
         template_name = 'html/index.html'
         context = {
         }
