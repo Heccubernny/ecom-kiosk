@@ -6,6 +6,10 @@ app_name = 'dap'
 urlpatterns = [
     path("login", LoginUserView.as_view(), name="WelcomePage"),
     path("register", RegisterUserView.as_view(), name="Registration Page"),
+    path("forget", forget_password, name = "forget password"),
+    path('token', token_send, name = "Token Send"),
+    path('email_verified/<auth_token>', email_verified, name = "Token Send"),
+   
     path('loginadmin', login_view, name = "login view"),
 
     path("index", HomeView.as_view(), name="WelcomePage"),
@@ -16,9 +20,9 @@ urlpatterns = [
     path("productpage", ProductPageView.as_view(), name = "product Page"),
     # path("", DefaultView.as_view(), name = "Default View")
 
-    # ADMIN uRL PATH
+    ADMIN URL PATH
     path("loginadmin", AdminLoginView.as_view(), name="Admin Login"),
-    path("adminindex", AdminIndexView.as_view(), name="Admin Index"),
+    path("home_admin", AdminHomeView.as_view(), name="Admin Index"),
     path("profileadmin", AdminProfileView.as_view(), name = "Admin Profile"),
     path('admin/', include('django.contrib.auth.urls')),
 

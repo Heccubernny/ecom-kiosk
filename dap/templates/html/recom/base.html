@@ -428,9 +428,9 @@
                               <div class="icon-nav">
                                   <ul>
                                     {% if request.user.is_authenticated %}
-                                      <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user"></i></a>
+                                      <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user">{{request.user.username}}</i></a>
                                       {% else %}
-                                      <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user"></i><h6 class="">Login</h6></a>
+                                      <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user"></i><h6 class="btn btn-rounded">Login</h6></a>
                                       </li>
                                     {% endif %}
 

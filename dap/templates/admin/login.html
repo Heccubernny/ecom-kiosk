@@ -191,14 +191,14 @@
                             </ul>
                             <div class="tab-content" id="top-tabContent">
                                 <div class="tab-pane fade show active" id="top-profile" role="tabpanel" aria-labelledby="top-profile-tab">
-                                    <form class="form-horizontal auth-form" method="post" action = "">
+                                    <form class="form-horizontal auth-form" method="post">
                                     	{% csrf_token %}
                                         <div class="form-group">
-                                            <input required="" name={{dap.username}} type="text" class="form-control" placeholder="Username" id="exampleInputEmail1">
+                                            <input required="" name=username type="text" class="form-control" placeholder="Username" id="exampleInputEmail1">
                                             <!-- {{ form.username }} -->
                                         </div>
                                         <div class="form-group">
-                                            <input required="" name={{dap.password}} type="password" class="form-control" placeholder="Password">
+                                            <input required="" name=password type="password" class="form-control" placeholder="Password">
                                         </div>
                                         <div class="form-terms">
                                             <div class="custom-control custom-checkbox mr-sm-2">
@@ -224,13 +224,13 @@
                                 <div class="tab-pane fade" id="top-contact" role="tabpanel" aria-labelledby="contact-top-tab">
                                     <form class="form-horizontal auth-form">
                                         <div class="form-group">
-                                            <input required="" name="login[username]" type="email" class="form-control" placeholder="Username" id="exampleInputEmail12">
+                                            <input required="" name="username" type="email" class="form-control" placeholder="Username" id="exampleInputEmail12">
                                         </div>
                                         <div class="form-group">
-                                            <input required="" name="login[password]" type="password" class="form-control" placeholder="Password">
+                                            <input required="" name="password" type="password" class="form-control" placeholder="Password">
                                         </div>
                                         <div class="form-group">
-                                            <input required="" name="login[password]" type="password" class="form-control" placeholder="Confirm Password">
+                                            <input required="" name="c_password" type="password" class="form-control" placeholder="Confirm Password">
                                         </div>
                                         <div class="form-terms">
                                             <div class="custom-control custom-checkbox mr-sm-2">

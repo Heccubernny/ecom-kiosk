@@ -5,15 +5,15 @@ from django.http import HttpResponse
 from django.views import View
 from django.urls import reverse
 from django.views.generic import *
-from .models import *
+from dap.models import *
 from rest_framework import generics
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, User
-from dap.models import Reg_User as ru
 from django.contrib.contenttypes.models import ContentType
-
+import uuid
+from django.core.mail import send_mail
 
 
 # content_type = ContentType.objects.get_for_model(Upload_Product)
@@ -27,6 +27,7 @@ from django.contrib.contenttypes.models import ContentType
 # Create your views here.
 class LoginUserView(View):
     def get(self, request):
+
         return render(request, 'html/login.html')
 
 
@@ -40,26 +41,72 @@ class RegisterUserView(View):
         return render(request, template_name, context)
 
     def post(self, request):
-        if request.method == "POST":
+        if request.method == 'POST':
             firstname = request.POST['fname']
             lastname = request.POST['lname']
             username  = request.POST.get('uname')
             email = request.POST['email']
-            password1 = request.POST['password1']
-            password2 = request.POST.get('password2')
+            password = request.POST['password']
+            c_password = request.POST['c_password']
 
-            myuser = ru.objects.create_user(username = "username", email = "email", password1="password1", password2="password2")
-            myuser.first_name = firstname
-            myuser.last_name = lastname
+            try:
+                # if User.objects.filter(username = username).first():
+                #     messages.success(request, 'Username is taken')
+                #     return redirect('/register')
+                # if User.objects.filter(email=email).first():
+                #     messages.success(request, 'Email is taken')
+                #     return redirect('/register')
+                # if User.objects.filter(password1 == password2).first():
+                #     messages.success(request, 'password does not match')
+                #     return redirect('/register')
 
-            myuser.save()
 
-            success_message = "Your Account has been successfully created"
-            error_message = "Your Account creation was not successful, Please check your input"
+                myuser = User(username = username, email = email, auth_token = auth_token)
+                profile_obj.set_password(password)
+                profile_obj.set_password(c_password)
+                # myuser.first_name = firstname
+                # myuser.last_name = lastname
+                # myuser.auth_token = auth_token
+                # myuser.password = password
+                # myuser.c_password = c_password
+                # myuser.save()
+                auth_token = str(uuid.uuid4())
+                profile_obj = UserRegistration(user = myuser, auth_token = auth_token)
+                profile_obj.firstname = firstname
+                profile_obj.lastname = lastname
+                profile_obj.set_password(password)
+                profile_obj.set_password(c_password)
+                profile_obj.save()
 
-            messages.success(request, success_message)
+                
+
+                return redirect('token')
+
+            except Exception as e:
+                print(e)
 
             return redirect('/login')
+
+    def verify(self, request, auth_token):
+        try:
+            profile_obj = UserRegistration.objects.filter(auth_token = auth_token).first()
+
+            if profile_obj:
+                if profile_obj.is_verified:
+                    messages.success(request, verify_message)
+                    return redirect('/login')
+                    verify_message = "Your Account is been verify"
+                    error_message = "Your Account creation was not successful, Please check your input"
+                    success_message = "Your Account has been verified."
+                    profile_obj.is_verified = True
+                    profile_obj.save()
+                    messages.success(request, success_message)
+                    return redirect('/login')
+                else:
+                    messages.success(request, error_message)
+                    return redirect('/register')
+
+
 
 
 class BaseView(View):
@@ -77,7 +124,11 @@ class BaseView(View):
 
         return render(request, template_name, context)
 
+
+
+
 class HomeView(View):
+    # @login_required
     def get(self, request):
         template_name = 'html/index.html'
         context = {
@@ -146,6 +197,20 @@ class ProductPageView(View):
 #     serializer_class = LoginSerializer
 
 
+
+
+def token_send(request):
+    return render(request, 'html/token_send.html')
+
+
+def forget_password(request):
+    return render(request, 'html/forget-pwd.html')
+
+def email_verified(request):
+    return render(request, 'html/email_verified.html')
+
+
+
 # ADMIN VIEW LIST
 class AdminLoginView(View):
     def get(self, request):
@@ -155,7 +220,7 @@ class AdminLoginView(View):
         }
 
         
-        u_name = Reg_User.objects.get(username)
+        u_name = user.objects.get(username)
         pword = Reg_User.objects.get(password)
         username = request.POST['username']
         password = request.POST['password']
@@ -202,9 +267,9 @@ def login_view(request):
 
     return render(request, 'admin/login.html')
 
-class AdminIndexView(View):
+class AdminHomeView(View):
     def get(self, request):
-        template_name = 'admin/index.html'
+        template_name = 'admin/home.html'
         context = {}
 
         return render(request, template_name, context)
@@ -231,3 +296,29 @@ class AddDigitalProductView(View):
         return render(request, template_name, context)
 
 
+
+
+# def change_password(request):
+#     if request.method == 'POST':
+#         form = passwordChangeForm(user = request.user, data=request.POST)
+
+#         if form.is_valid():
+#             form.save()
+
+#             update_session_auth_hash(request, form.user)
+#             success_message = "Congrats {}, Your password was updated Successfully"
+#             messages.success(request, success_message.format(request.user))
+#             return redirect("/admin")
+
+#         else:
+#             error_message = "Please cross check the error below"
+#             messages.error(request, error_message)
+#             return redirect("/")
+
+#     else:
+#         form = PasswordChangeForm(user = request.user)
+#         template_name = 'change.html'
+#         context = {
+#             "form": form
+#         }
+#         return render(request, template_name, context)

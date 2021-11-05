@@ -10,9 +10,9 @@
                     <div>
                         <h2>login</h2>
                         <ul>
-                            <li><a href="#">home</a></li>
+                            <li><a href="index">home</a></li>
                             <li><i class="fa fa-angle-double-right"></i></li>
-                            <li><a href="#">login</a></li>
+                            <li><a href="login">login</a></li>
                         </ul>
                     </div>
                 </div>
@@ -29,7 +29,18 @@
             <div class="col-xl-4 col-lg-6 col-md-8 offset-xl-4 offset-lg-3 offset-md-2">
                 <div class="theme-card">
                     <h3 class="text-center">Login</h3>
-                    <form class="theme-form">
+                    <form class="theme-form" method="post">
+                         {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <div class="alert alert-info">
+                                {{ message }}
+                            </div>
+                            <!-- <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li> -->
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="text" class="form-control" id="email" placeholder="Email" name="email" required="">
@@ -38,11 +49,11 @@
                             <label for="review">Password</label>
                             <input type="password" class="form-control" id="review" name="password1" placeholder="Enter your password" required="">
                         </div>
-                        <a href="#" class="btn btn-normal">Login</a>
-                        <a class="float-right txt-default mt-2" href="forget-pwd.html" id="fgpwd">Forgot your password?</a>
+                        <button type="submit" class="btn btn-normal">Login</button>
+                        <a class="float-right txt-default mt-2" href="forget" id="fgpwd">Forgot your password?</a>
                     </form>
                     <p class="mt-3">Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.</p>
-                    <a href="register.html" class="txt-default pt-3 d-block">Create an Account</a>
+                    <a href="register" class="txt-default pt-3 d-block">Create an Account</a>
                 </div>
             </div>
         </div>
