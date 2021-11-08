@@ -1,7 +1,11 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from dap.models import Reg_User as ru
-# Create your tests here.
+
+import unittest
+from unittest.mock import patch, call
+from sending_mail_by_python import sending_mail as target
+
 
 class UsersManagersTests(TestCase):
 	def test_create_user(self):
@@ -56,3 +60,16 @@ class UserLogiinTests(TestCase):
 			self.assertIsNone(user.username)
 		except AttributeError:
 			pass
+
+class SendEmailTests(unittest.TestCase):
+    def test_send_email(self):
+        with patch("smtplib.SMTP") as smtp:
+            from_address = "from@domain.com"
+            to_address = ["to@domain.com"]
+
+            msg = target.build_email(
+                from_address, to_address, "subject", "message")
+            target.send_email(msg)
+
+            # Get instance of mocked SMTP object
+            instance = smtp.return_value

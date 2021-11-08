@@ -427,8 +427,9 @@
                           <div>
                               <div class="icon-nav">
                                   <ul>
-                                    {% if request.user.is_authenticated %}
-                                      <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user">{{request.user.username}}</i></a>
+                                    {% if user.is_authenticated %}
+                                      <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user">
+                                      </i></a><h4 class="text-black title-font" style="color: #000;">{{user.username}}</h4>
                                       {% else %}
                                       <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user"></i><h6 class="btn btn-rounded px-1 py-1">Login</h6></a>
                                       </li>

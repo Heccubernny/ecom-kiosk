@@ -50,9 +50,15 @@ from .models import *
 
 # admin.site.register(Reg_User, CustomUserAdmin)
 
-admin.site.register(Upload_Product)
+admin.site.register(UploadProduct)
 
-admin.site.register(Add_Products)
+admin.site.register(UserRegistration)
+
+admin.site.register(Order)
+
+admin.site.register(OrderItem)
+admin.site.register(ShippingAddress)
+
 
 # class UserAdmin(admin.ModelAdmin):
 #     form = UserLogForm

@@ -5,7 +5,13 @@
 	<div class="container mt-5 mb-5">
 		<div class="card">
 			<div class="card-body">
-			<h3 class="card title text-center">We have sent an email to you</h3>
+			Hi {{user.username}}
+			Please click on the link to confirm your registration,
+			<h3 class="card title text-center">We have sent an email to you
+			
+			http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+			</h3>
 			<div class="card-text text-center">
 				Please check your mail 
 				<div class="card-text text-center">

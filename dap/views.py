@@ -13,9 +13,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission, User
 from django.contrib.contenttypes.models import ContentType
 import uuid
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.contrib.auth.hashers import make_password
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
 
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
 
 # content_type = ContentType.objects.get_for_model(Upload_Product)
 # permission = permission.objects.create(
@@ -47,7 +52,7 @@ class LoginUserView(View):
             user = authentication(username = username or email, password = password)
 
             if user is None:
-                messages.success(request, 'Wrong password.')
+                messages.success(request, 'Wrong username or password.')
                 return redirect('/login')
 
             login(request, user)
@@ -89,9 +94,10 @@ class RegisterUserView(View):
                 user.set_password(password)
                 # user.set_password(c_password)
                 user.save()
+                current_site = get_current_site(request)
                 auth_token = str(uuid.uuid4())
                 profile_obj = UserRegistration.objects.create(user = user, auth_token = auth_token)
-                profile_obj.set_password(password)
+                # profile_obj.set_password(password)
                 # profile_obj.set_password(c_password)
                 # profile_obj.check_password(password)
                 profile_obj.save()
@@ -108,7 +114,7 @@ class RegisterUserView(View):
 
     def send_mail_after_registration(email, token):
         subject = 'Your accounts need to be verified'
-        message = f'Hi paste the link to verify your account https://127.0.0.1:8000/verify/{token}'
+        message = f' you are re receiving this email because you requested a password reset for your user account at Kiosk Please go to the following page and choose a new password: Hi paste the link to verify your account https://127.0.0.1:8000/verify/{token} Thanks for using our site. The Kiosk team'
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [email]
         send_mail(subject, message, email_from, recipient_list)
@@ -144,7 +150,7 @@ class BaseView(View):
     """docstring for BaseView"""
     def get(self, request):
         template_name = 'html/recom/base.html'
-        product_objects = Upload_Product.objects.all()     
+        product_objects = UploadProduct.objects.all()     
 
         product_name = request.GET.get('product_name')
         context = {
@@ -156,10 +162,24 @@ class BaseView(View):
         return render(request, template_name, context)
 
 
+class CartHomeView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            customer = request.user.customer
+            order, created = Order.objects.get_or_create(customer = customer, complete = False)
+            items = order.orderitem_set.all()
+
+        else:
+            items = []
+            template_name = 'html/cart.html'
+        context = {
+            'items': items
+        }
+        return render(request, template_name, context)
 
 
 class HomeView(View):
-    @login_required
+    # @login_required(login_url = 'login.html')
     def get(self, request):
 
         template_name = 'html/index.html'
@@ -171,17 +191,20 @@ class HomeView(View):
 class ShopView(View):
     def get(self, request):
         template_name = 'html/shop.html'
-        # model = {
-        # Upload_Product,
-        # }
+        model = {
+        UploadProduct,
+        }
 
-        # paginate_by = 100
-        # product_details = get_object_or_404(Upload_Product)
+        paginate_by = 100
+        # product_details = get_object_or_404(UploadProduct)
+
+        products = UploadProduct.objects.all()
+
 
 
         context = {
-            # 'product_details': product_details,
-            # 'error_message': "No Product was found",
+            'products': products,
+            'error_message': "No Product was found",
         }
 
 

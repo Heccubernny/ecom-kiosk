@@ -8,6 +8,9 @@ urlpatterns = [
     path("register", RegisterUserView.as_view(), name="Registration Page"),
     path("forget", forget_password, name = "forget password"),
     path('token', token_send, name = "Token Send"),
+    path('cart', CartHomeView.as_view(), name = 'Cart main homepage'),
+    # path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        # views.activate, name='activate'),
     path('email_verified/<auth_token>', email_verified, name = "Token Send"),
    
     path('loginadmin', login_view, name = "login view"),
@@ -21,10 +24,10 @@ urlpatterns = [
     # path("", DefaultView.as_view(), name = "Default View")
 
     # ADMIN URL PATH
-    path("loginadmin", AdminLoginView.as_view(), name="Admin Login"),
-    path("home_admin", AdminHomeView.as_view(), name="Admin Index"),
-    path("profileadmin", AdminProfileView.as_view(), name = "Admin Profile"),
-    path('admin/', include('django.contrib.auth.urls')),
+    # path("loginadmin", AdminLoginView.as_view(), name="Admin Login"),
+    # path("home_admin", AdminHomeView.as_view(), name="Admin Index"),
+    # path("profileadmin", AdminProfileView.as_view(), name = "Admin Profile"),
+    # path('admin/', include('django.contrib.auth.urls')),
 
     path('add-digital-product', AddDigitalProductView.as_view(), name = "Add Digital Product")
 
