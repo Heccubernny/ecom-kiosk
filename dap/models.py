@@ -31,12 +31,10 @@ class UserRegistration(models.Model):
 
 class UploadProduct(models.Model):
     def get_product_uploaded_front_image_filepath(self,upload_to):
-        return f'product_upload_front_images/{self.product_categories}/{self.id}/{"product_upload_front_image.png"}'
-        return "product_upload_front_images{/%Y/%m/%d/product_upload_local_image.png"
+        return f'product_upload_front_images/{self.product_categories}/{self.id}/product_upload_front_image.png'
 
     def get_product_uploaded_back_image_filepath(self,upload_to):
-        return f'product_upload_back_images/{self.product_categories}/{self.id}/{"product_upload_back_image.png"}'
-        return "product_upload_back_images{/%Y/%m/%d/product_upload_local_image.png"
+        return f'product_upload_back_images/{self.product_categories}/{self.id}/product_upload_back_image.png'
     
 
 
